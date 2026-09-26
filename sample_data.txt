@@ -1,0 +1,1 @@
+Example: KDA123A -> Slot 1 -> arrival -> exit -> payment -> barrier opens
