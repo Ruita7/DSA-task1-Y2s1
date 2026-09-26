@@ -6,10 +6,13 @@ class Database:
     """Handles all persistent SQLite database operations."""
 
     def __init__(self, db_name: str):
-        self.db_name = db_name
-        self.connection = sqlite3.connect(self.db_name)
-        self.connection.row_factory = sqlite3.Row
-        self.create_tables()
+       self.db_name = db_name
+       self.connection = sqlite3.connect(
+           self.db_name,
+           check_same_thread=False
+       )
+       self.connection.row_factory = sqlite3.Row
+       self.create_tables()
 
     def create_tables(self):
         cursor = self.connection.cursor()
