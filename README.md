@@ -10,102 +10,111 @@ The system:
 3. Assigns an available parking slot.
 4. Records arrival and exit times.
 5. Calculates parking duration.
-6. Calculates the parking fee.
-7. Records payment.
-8. Opens the exit barrier only after successful payment.
-9. Keeps parking and payment records in a dynamic SQLite database.
-10. Uses DSA concepts such as dictionaries, lists, a queue, searching, and sorting.
+6. Calculates the parking charge.
+7. Calculates configurable Kenyan VAT.
+8. Supports manual/demo payment.
+9. Supports Safaricom Daraja 3.0 M-Pesa Express (STK Push) when Daraja credentials and a public HTTPS callback are configured.
+10. Opens the exit barrier only after successful payment.
+11. Keeps parking, tax, payment and M-Pesa transaction records in SQLite.
+12. Uses DSA concepts such as dictionaries, lists, a FIFO queue, searching, and sorting.
 
-## Important assumption
+## Taxation
 
-The assignment does not specify a parking tariff. This project therefore uses a configurable rate of **KSh 50 per started hour**, with a minimum charge of one hour.
+The project includes a configurable VAT calculator. The default configuration uses the 16% general VAT rate published by KRA for taxable supplies. Whether VAT should actually be charged depends on the parking operator's KRA tax status and the tax treatment of the service.
 
-Change `HOURLY_RATE` in `src/config.py` if your lecturer/client gives a different rate.
+The application calculates and displays the tax; it does **not** claim to be an eTIMS tax-invoice or automatic KRA filing system. A production deployment would require the appropriate KRA/eTIMS compliance integration and configuration.
+
+Change `VAT_ENABLED` or `VAT_RATE` in `src/config.py` if the client/lecturer specifies different treatment.
+
+## M-Pesa Daraja
+
+The project includes a Safaricom Daraja 3.0 M-Pesa Express STK Push integration.
+
+Credentials are read from environment variables and are not stored in GitHub. Use `.env.example` as a template and add real credentials only to your Codespaces/local environment.
+
+The Daraja callback URL must be publicly reachable over HTTPS for real STK Push callbacks. GitHub Codespaces can be used for development/testing, but a stable HTTPS endpoint is recommended for production.
+
+The integration targets the Daraja sandbox by default.
 
 ## Requirements
 
 - Python 3.10 or newer
-- No external Python packages are required.
+- Flask
+- Requests
+- Safaricom Daraja sandbox credentials for M-Pesa testing
 
-## Run the program
-
-From the project folder:
+Install dependencies:
 
 ```bash
-python src/main.py
+pip install -r requirements.txt
 ```
 
-The SQLite database `parking.db` is created automatically the first time the program runs.
+## Run the web application
 
-## Project structure
-
-```text
-smart_parking_system/
-├── README.md
-├── requirements.txt
-├── .gitignore
-├── src/
-│   ├── __init__.py
-│   ├── config.py
-│   ├── models.py
-│   ├── database.py
-│   ├── parking_system.py
-│   └── main.py
-├── docs/
-│   ├── algorithms.md
-│   ├── data_structures.md
-│   └── database_design.md
-└── tests/
-    └── test_parking_system.py
+```bash
+python web/app.py
 ```
 
-## Main DSA concepts
+Then open the forwarded port 5000 in Codespaces.
 
-### Dictionary
-Parking slots are stored as a dictionary:
-- key = slot number
-- value = `ParkingSlot` object
+The SQLite database `parking.db` is created automatically. Existing databases are upgraded with the new tax and M-Pesa transaction columns/tables.
 
-This gives fast direct access to a slot.
-
-### Queue
-Vehicles that arrive when all slots are occupied are placed in a FIFO queue using `collections.deque`.
-
-FIFO means **First In, First Out**.
-
-### Searching
-A vehicle is searched using its registration number.
-
-### Sorting
-Parking records can be sorted by duration or fee.
-
-### Classes / objects
-`Vehicle`, `ParkingSlot`, and `ParkingRecord` group related data together.
-
-### Database
-SQLite provides persistent storage for vehicles, slots, parking records, and payments.
-
-## Testing
-
-Run:
+## Test the DSA code
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
-## GitHub
+## Project structure
 
-After creating a GitHub repository:
-
-```bash
-git init
-git add .
-git commit -m "Initial smart parking system"
-git branch -M main
-git remote add origin YOUR_GITHUB_REPOSITORY_URL
-git push -u origin main
+```text
+DSA-task1-Y2s1/
+├── README.md
+├── requirements.txt
+├── .env.example
+├── .gitignore
+├── src/
+│   ├── config.py
+│   ├── models.py
+│   ├── database.py
+│   ├── parking_system.py
+│   ├── tax.py
+│   ├── mpesa.py
+│   └── main.py
+├── web/
+│   ├── app.py
+│   ├── templates/
+│   └── static/
+├── docs/
+└── tests/
 ```
 
-Replace `YOUR_GITHUB_REPOSITORY_URL` with the URL of your own GitHub repository.
+## Important project assumptions
 
-Do not commit the generated `parking.db` file if you want GitHub to contain only the source project. The database file is ignored by `.gitignore`.
+The original DSA assignment does not specify a parking tariff, so the project uses a configurable example rate of **KSh 50 per started hour**. The tax setting is also configurable.
+
+## Main DSA concepts
+
+### Dictionary
+Parking slots and active vehicles are stored in dictionaries for direct lookup.
+
+### Queue
+Vehicles that arrive when all slots are occupied are placed in a FIFO queue using `collections.deque`.
+
+### Searching
+Vehicles are searched using their registration numbers.
+
+### Sorting
+Parking records can be sorted by duration or amount due.
+
+### Classes / objects
+`Vehicle`, `ParkingSlot`, and `ParkingRecord` group related data together.
+
+### Database
+SQLite provides persistent storage for parking slots, vehicles, parking records, payments and M-Pesa transaction state.
+
+## Official references
+
+- Safaricom Daraja Developer Portal: https://developer.safaricom.co.ke/
+- KRA VAT information: https://www.kra.go.ke/individual/filing-paying/types-of-taxes/value-added-tax
+- KRA eTIMS information: https://www.kra.go.ke/business/etims-electronic-tax-invoice-management-system/learn-about-etims/what-is-etims
