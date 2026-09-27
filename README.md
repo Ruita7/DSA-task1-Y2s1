@@ -89,9 +89,17 @@ DSA-task1-Y2s1/
 └── tests/
 ```
 
-## Important project assumptions
+## Parking tariff
 
-The original DSA assignment does not specify a parking tariff, so the project uses a configurable example rate of **KSh 50 per started hour**. The tax setting is also configurable.
+The system follows the assignment tariff exactly:
+
+- Up to 30 minutes: **FREE**
+- Up to 2 hours: **KSh 50**
+- Up to 4 hours: **KSh 100**
+- Up to 6 hours: **KSh 300**
+- Over 6 hours: **KSh 500**
+
+VAT is disabled because the assignment specifies the parking fees as the amounts to pay; no additional tax is added to the displayed charge.
 
 ## Main DSA concepts
 
