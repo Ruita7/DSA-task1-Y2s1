@@ -6,7 +6,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.config import DATABASE_NAME, HOURLY_RATE, TOTAL_SLOTS
+from src.config import DATABASE_NAME, TOTAL_SLOTS
 from src.database import Database
 from src.parking_system import ParkingSystem
 
@@ -188,7 +188,7 @@ def main():
 
     print("\nWelcome to the Smart Parking Management System.")
     print(f"Parking capacity: {TOTAL_SLOTS} slots")
-    print(f"Example tariff: KSh {HOURLY_RATE:.2f} per started hour")
+    print("Tariff: Up to 30 min FREE | Up to 2 hrs KSh 50 | Up to 4 hrs KSh 100 | Up to 6 hrs KSh 300 | Over 6 hrs KSh 500")
 
     try:
         while True:
