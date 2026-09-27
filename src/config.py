@@ -1,17 +1,13 @@
 TOTAL_SLOTS = 10
 
-# Parking tariff (before tax).
+# Parking tariff before VAT.
 HOURLY_RATE = 50.0
 
-# Assignment parking tariff. VAT is not added to the specified parking fees.
-
-# Kenya VAT configuration.
-# Set VAT_ENABLED = True if the parking operator is not charging VAT.
-# The general VAT rate published by KRA is 16% for taxable supplies.
-VAT_ENABLED = False
+# VAT configuration.
+VAT_ENABLED = True
 VAT_RATE = 0.16
 
 DATABASE_NAME = "parking.db"
 
-# M-Pesa Daraja defaults to the Safaricom sandbox.
+# M-Pesa Daraja uses the Safaricom sandbox by default.
 MPESA_BASE_URL = "https://sandbox.safaricom.co.ke"
