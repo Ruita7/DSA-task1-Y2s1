@@ -16,6 +16,10 @@ from src.parking_system import ParkingSystem
 app = Flask(__name__)
 app.secret_key = "smart-parking-demo-key"
 
+import os
+
+MPESA_CONSUMER_KEY = os.getenv("MPESA_CONSUMER_KEY")
+MPESA_CONSUMER_SECRET = os.getenv("MPESA_CONSUMER_SECRET")
 db = Database(DATABASE_NAME)
 system = ParkingSystem(db)
 
