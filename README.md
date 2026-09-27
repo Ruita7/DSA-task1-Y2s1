@@ -1,40 +1,50 @@
 # Smart Parking Management System
 
-A beginner-friendly Python implementation of the Multimedia University of Kenya Data Structures and Algorithms (DSA) Task One.
+A Python-based parking management system developed for the Multimedia University of Kenya Data Structures and Algorithms (DSA) Task One.
 
-## Problem addressed
+## Features
 
 The system:
 1. Displays available parking slots before entry.
 2. Records vehicles when they arrive.
 3. Assigns an available parking slot.
 4. Records arrival and exit times.
-5. Calculates parking duration.
-6. Calculates the parking charge.
-7. Calculates configurable Kenyan VAT.
-8. Supports manual/demo payment.
-9. Supports Safaricom Daraja 3.0 M-Pesa Express (STK Push) when Daraja credentials and a public HTTPS callback are configured.
-10. Opens the exit barrier only after successful payment.
-11. Keeps parking, tax, payment and M-Pesa transaction records in SQLite.
-12. Uses DSA concepts such as dictionaries, lists, a FIFO queue, searching, and sorting.
+5. Calculates parking duration and parking charges.
+6. Calculates VAT on the parking charge.
+7. Supports manual/demo payment.
+8. Supports Safaricom Daraja 3.0 M-Pesa Express (STK Push).
+9. Opens the exit barrier after successful payment.
+10. Stores parking, payment, tax and M-Pesa transaction records in SQLite.
+11. Uses dictionaries, lists, a FIFO queue, searching and sorting.
 
-## Taxation
+## Parking Tariff
 
-The project includes a configurable VAT calculator. The default configuration uses the 16% general VAT rate published by KRA for taxable supplies. Whether VAT should actually be charged depends on the parking operator's KRA tax status and the tax treatment of the service.
+The parking charges are:
 
-The application calculates and displays the tax; it does **not** claim to be an eTIMS tax-invoice or automatic KRA filing system. A production deployment would require the appropriate KRA/eTIMS compliance integration and configuration.
+- Up to 30 minutes: **FREE**
+- Up to 2 hours: **KSh 50**
+- Up to 4 hours: **KSh 100**
+- Up to 6 hours: **KSh 300**
+- Over 6 hours: **KSh 500**
 
-Change `VAT_ENABLED` or `VAT_RATE` in `src/config.py` if the client/lecturer specifies different treatment.
+The parking charge is used as the subtotal. The application then calculates VAT at the configured rate and adds it to the amount payable.
 
-## M-Pesa Daraja
+## Tax
 
-The project includes a Safaricom Daraja 3.0 M-Pesa Express STK Push integration.
+The default VAT rate is 16%. VAT can be enabled or disabled in `src/config.py`.
 
-Credentials are read from environment variables and are not stored in GitHub. Use `.env.example` as a template and add real credentials only to your Codespaces/local environment.
+For example, a KSh 50 parking charge results in:
+- Parking charge: KSh 50
+- VAT (16%): KSh 8
+- Total payable: KSh 58
 
-The Daraja callback URL must be publicly reachable over HTTPS for real STK Push callbacks. GitHub Codespaces can be used for development/testing, but a stable HTTPS endpoint is recommended for production.
+## M-Pesa
 
-The integration targets the Daraja sandbox by default.
+The application includes Safaricom Daraja 3.0 M-Pesa Express STK Push integration.
+
+M-Pesa credentials are read from environment variables. Use `.env.example` as a guide when configuring the application.
+
+The Daraja callback URL must be publicly reachable over HTTPS when testing STK Push callbacks. The application uses the Safaricom sandbox by default.
 
 ## Requirements
 
@@ -43,29 +53,29 @@ The integration targets the Daraja sandbox by default.
 - Requests
 - Safaricom Daraja sandbox credentials for M-Pesa testing
 
-Install dependencies:
+Install the dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Run the web application
+## Running the Web Application
 
 ```bash
 python web/app.py
 ```
 
-Then open the forwarded port 5000 in Codespaces.
+Open the forwarded port 5000 when running the application in Codespaces.
 
-The SQLite database `parking.db` is created automatically. Existing databases are upgraded with the new tax and M-Pesa transaction columns/tables.
+The SQLite database is created automatically.
 
-## Test the DSA code
+## Running Tests
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
-## Project structure
+## Project Structure
 
 ```text
 DSA-task1-Y2s1/
@@ -89,39 +99,27 @@ DSA-task1-Y2s1/
 └── tests/
 ```
 
-## Parking tariff
-
-The system follows the assignment tariff exactly:
-
-- Up to 30 minutes: **FREE**
-- Up to 2 hours: **KSh 50**
-- Up to 4 hours: **KSh 100**
-- Up to 6 hours: **KSh 300**
-- Over 6 hours: **KSh 500**
-
-VAT is disabled because the assignment specifies the parking fees as the amounts to pay; no additional tax is added to the displayed charge.
-
-## Main DSA concepts
+## DSA Concepts Used
 
 ### Dictionary
 Parking slots and active vehicles are stored in dictionaries for direct lookup.
 
 ### Queue
-Vehicles that arrive when all slots are occupied are placed in a FIFO queue using `collections.deque`.
+Vehicles arriving when all parking slots are occupied are placed in a FIFO queue using `collections.deque`.
 
 ### Searching
-Vehicles are searched using their registration numbers.
+Vehicles can be searched using their registration numbers.
 
 ### Sorting
 Parking records can be sorted by duration or amount due.
 
-### Classes / objects
-`Vehicle`, `ParkingSlot`, and `ParkingRecord` group related data together.
+### Classes and Objects
+`Vehicle`, `ParkingSlot`, and `ParkingRecord` group related data.
 
 ### Database
-SQLite provides persistent storage for parking slots, vehicles, parking records, payments and M-Pesa transaction state.
+SQLite provides persistent storage for parking slots, vehicles, parking records, payments and M-Pesa transactions.
 
-## Official references
+## References
 
 - Safaricom Daraja Developer Portal: https://developer.safaricom.co.ke/
 - KRA VAT information: https://www.kra.go.ke/individual/filing-paying/types-of-taxes/value-added-tax
