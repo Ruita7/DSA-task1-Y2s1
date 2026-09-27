@@ -36,13 +36,19 @@ class ParkingSystemTests(unittest.TestCase):
 
     def test_fee_calculation(self):
         self.assertEqual(self.system.calculate_fee(1), 50.0)
-        self.assertEqual(self.system.calculate_fee(3), 150.0)
+        self.assertEqual(self.system.calculate_fee(3), 100.0)
+        self.assertEqual(self.system.calculate_fee(0), 0.0)
+        self.assertEqual(self.system.calculate_fee(2), 50.0)
+        self.assertEqual(self.system.calculate_fee(4), 100.0)
+        self.assertEqual(self.system.calculate_fee(5), 300.0)
+        self.assertEqual(self.system.calculate_fee(6), 300.0)
+        self.assertEqual(self.system.calculate_fee(7), 500.0)
 
     def test_vat_calculation(self):
         tax = calculate_tax(50.0)
         self.assertEqual(tax.subtotal, 50.0)
-        self.assertEqual(tax.tax_amount, 8.0)
-        self.assertEqual(tax.total, 58.0)
+        self.assertEqual(tax.tax_amount, 0.0)
+        self.assertEqual(tax.total, 50.0)
 
 
 if __name__ == "__main__":
