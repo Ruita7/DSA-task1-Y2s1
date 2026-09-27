@@ -78,11 +78,21 @@ class ParkingSystem:
     @staticmethod
     def calculate_duration(arrival_time, exit_time):
         seconds = (exit_time - arrival_time).total_seconds()
-        return max(1, math.ceil(seconds / 3600))
+        if seconds <= 30 * 60:
+            return 0
+        return math.ceil(seconds / 3600)
 
     @staticmethod
     def calculate_fee(duration_hours):
-        return duration_hours * HOURLY_RATE
+        if duration_hours <= 0:
+            return 0.0
+        if duration_hours <= 2:
+            return 50.0
+        if duration_hours <= 4:
+            return 100.0
+        if duration_hours <= 6:
+            return 300.0
+        return 500.0
 
     def vehicle_exit(self, plate_number):
         plate_number = plate_number.strip().upper()
