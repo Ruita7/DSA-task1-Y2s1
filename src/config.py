@@ -6,7 +6,7 @@ HOURLY_RATE = 50.0
 # Assignment parking tariff. VAT is not added to the specified parking fees.
 
 # Kenya VAT configuration.
-# Set VAT_ENABLED = False if the parking operator is not charging VAT.
+# Set VAT_ENABLED = True if the parking operator is not charging VAT.
 # The general VAT rate published by KRA is 16% for taxable supplies.
 VAT_ENABLED = False
 VAT_RATE = 0.16
